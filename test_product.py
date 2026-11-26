@@ -13,12 +13,13 @@ def test_get_product_404():
 def test_datebase_consistency():
     url="https://jsonplaceholder.typicode.com/posts/1"
     response=requests.get(url)
-    api_id=requests.json()["id"]
-    conn=sqlite3.connect(":memory")
+    api_id=response.json()["id"]
+    conn=sqlite3.connect(":memory:")
     cursor=conn.cursor()
-    cursor.execute("CREATE TABLE product(id INTEGER,name TEXT)")
-    cursor.execute("SELECT id FROM product WHERE name ='二手手机'")
-    db_id=cursor.fetchone()[0]
+    cursor.execute("CREATE TABLE product(id INTEGER, name TEXT)")
+    cursor.execute("INSERT INTO product VALUES (1, '二手手机')")
+    cursor.execute("SELECT id FROM product WHERE name = '二手手机'")
+    db_id = cursor.fetchone()[0]
     conn.close()
     assert api_id==db_id
 
